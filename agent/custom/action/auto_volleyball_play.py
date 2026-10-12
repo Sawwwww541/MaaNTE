@@ -202,12 +202,12 @@ class VolleyballSkipIntro(CustomAction):
 
 @AgentServer.custom_action("volleyball_view_setup")
 class VolleyballViewSetup(CustomAction):
-    """一次性视角初始化：可选先发送 Z、Z、R，再把鼠标下移到俯视角度
+    """一次性视角初始化：可选先发送一次 R，再把鼠标下移到俯视角度
     （Z视角切换有记忆，仅重登后需手动切）。
 
     param:
         dy: 鼠标相对下移像素数，默认 5500。
-        zr_prep: 是否在鼠标下移前发送 Z、Z、R 三次按键，默认 True；
+        zr_prep: 是否在鼠标下移前发送一次 R 按键，默认 True；
                  传字符串时 "false"/"0"/"no"/空串 视为关闭。
     """
 
@@ -241,12 +241,11 @@ class VolleyballViewSetup(CustomAction):
                         time.sleep(VIEW_PREP_GAP)
                     time.sleep(VIEW_PREP_SETTLE)
                     logger.info(
-                        "VolleyballViewSetup: zr prep done (Z,Z,R) tap=%.2f gap=%.2f",
+                        "VolleyballViewSetup: view prep done (R) tap=%.2f",
                         VIEW_PREP_TAP,
-                        VIEW_PREP_GAP,
                     )
                 except Exception:
-                    logger.exception("VolleyballViewSetup: zr prep failed, continue")
+                    logger.exception("VolleyballViewSetup: view prep failed, continue")
             logger.info("VolleyballViewSetup: relative move dy=%d", dy)
             controller.post_relative_move(0, dy).wait()
             time.sleep(0.5)
@@ -438,9 +437,9 @@ KEY_R = 82
 
 _KEY_NAMES = {KEY_W: "W", KEY_A: "A", KEY_S: "S", KEY_D: "D"}
 
-# 视角初始化预处理：鼠标下移前依次点按 Z、Z、R
-# （每键按压时长 / 相邻两键间隔 / 发完到鼠标下移之间的静置，单位秒）
-VIEW_PREP_KEYS = (KEY_Z, KEY_Z, KEY_R)
+# 视角初始化预处理：鼠标下移前点按一次 R
+# （按键按压时长 / 相邻两键间隔 / 发完到鼠标下移之间的静置，单位秒）
+VIEW_PREP_KEYS = (KEY_R,)
 VIEW_PREP_TAP = 0.10
 VIEW_PREP_GAP = 0.15
 VIEW_PREP_SETTLE = 0.30
